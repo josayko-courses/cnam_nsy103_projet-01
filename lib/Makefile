@@ -1,16 +1,26 @@
 LIB = biblio.a
 
 SRC = biblio.c
-OBJ = $(SRC:.c=.o)
+
+OBJDIR = obj/
+OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
 all: $(LIB)
 
-$(LIB): $(OBJ)
+$(LIB): $(OBJDIR) $(OBJ)
 	ar rc $(LIB) $(OBJ)
 	ranlib $(LIB)
 
+# Create an obj/ directory for the *.o files
+$(OBJDIR):
+	mkdir -p $@
+
+# Compile the *.o files
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJDIR)
 
 fclean: clean
 	rm -rf $(LIB)
