@@ -1,5 +1,6 @@
 # Executable name
-EXEC = srvudp
+SERVER = srvudp
+CLIENT = cliudp
 
 # Compiler
 CC = gcc
@@ -9,24 +10,25 @@ CFLAGS = -Wall -Wextra -Werror
 
 # Source files
 SRCDIR = src/
-SRC = srvudp.c
+SRC = srvudp.c \
+			cliudp.c
 
 # Lib
 LIB = lib/biblio.a
 
 # Includes
-INC = -I.
+INC = -Ilib
 
 # *.o files
 OBJDIR = obj/
 OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
-all: $(EXEC)
+all: $(SERVER) $(CLIENT)
 
 # Make the executable `project-01`
-$(EXEC): $(OBJDIR) $(OBJ)
+$(SERVER): $(OBJDIR) $(OBJ)
 	make -C lib/ 1>/dev/null
-	$(CC) $(OBJ) $(INC) $(LIB) -o $(EXEC)
+	$(CC) $(addprefix $(OBJDIR),srvudp.o) $(INC) $(LIB) -o $(SERVER)
 
 # Create an obj/ directory for the *.o files
 $(OBJDIR):
@@ -36,12 +38,15 @@ $(OBJDIR):
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
+$(CLIENT): $(SERVER)
+	$(CC) $(addprefix $(OBJDIR),cliudp.o) $(INC) $(LIB) -o $(CLIENT)
+
 clean:
 	rm -rf $(OBJDIR)
 	make clean -C lib/ 1>/dev/null
 
 fclean: clean
-	rm -rf $(EXEC)
+	rm -rf $(SERVER) $(CLIENT)
 	make fclean -C lib/ 1>/dev/null
 
-re: clean fclean
+re: fclean all

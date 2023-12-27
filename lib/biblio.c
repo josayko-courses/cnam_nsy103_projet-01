@@ -133,7 +133,7 @@ faute2:
     return (-1);
 }
 
-void test()
+void debug(char* message)
 {
-    printf("Test biblio\n");
+    printf("%s\n", message);
 }
