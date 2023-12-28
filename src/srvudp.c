@@ -10,15 +10,23 @@ void stopped()
     exit(0);
 }
 
-int main(void)
+int main(int argc, char** argv)
 {
+    if (argc != 2) {
+        printf("Usage: ./srvudp [PORT]\n");
+        return -1;
+    }
+
     signal(SIGINT, stopped);
-    printf("Server listening on 127.0.0.1:%d...\n", 8000);
-    char buffer[50];
+    int port = atoi(argv[1]);
+    printf("Server listening on port %d...\n", port);
+
+    char buffer[1024];
     memset(&buffer, 0, sizeof(buffer));
-    while (1) {
-        reception(8000, buffer);
-        printf("%s\n", buffer);
+
+    int ret = 0;
+    while ((ret = reception(port, buffer)) >= 0) {
+        printf("Message received: %s\n", buffer);
     }
     return 0;
 }
