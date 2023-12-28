@@ -1,3 +1,6 @@
+// Author: Jonny SAYKOSY
+// CNAM 2023-2024
+
 #include "biblio.h"
 #include <stdio.h>
 #include <stdlib.h>
